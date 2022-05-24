@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+
+<div class="externalBorder">
+    <div class="square">
+        <Header />
+        <div class="sidebar">
+            <div class="btn-group-vertical margin5">
+                <button class="btn btn-secondary "><i class="fa-solid fa-location-crosshairs"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-rss"></i></button>
+                <NavLink class="btn btn-secondary " href="UserList" style="margin-left:5px;">
+                    <i class="fa-solid fa-rss"></i>
+                </NavLink>
+            </div>
+        </div>
+        <div class="main">
+
+            <div class="row"> 
+                <div class="col-lg-1"></div>
+                <div class="col-lg-10">
+                    @Body
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+
+
+        </div>
+        <div class="sidebar">
+            <div class="btn-group-vertical ">
+                <button class="btn btn-secondary "><i class="fa-solid fa-user-astronaut"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-rocket"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-atom"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-tower-broadcast"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-utensils"></i></button>
+            </div>
+
+            <div class="btn-group-vertical  bottom-0 ">
+                <button class="btn btn-secondary "><i class="fa-solid fa-layer-group"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-user-astronaut"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-rocket"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-music"></i></button>
+                <button class="btn btn-secondary "><i class="fa-solid fa-compress"></i></button>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="news btn-secondary full-width">
+                <span>Breaking News</span>
+                <ul class="scrollLeft">
+                    <li><a href="#">Malattia: ponte uno in lockdown</a></li>
+                    <li><a href="#">Il prezzo del grano è in rialzo!</a></li>
+                    <li><a href="#">Reattore numero Quattro in avaria!</a></li>
+                    <li><a href="#">Il simbionte ha raggiunto il livello quattro di empatia...</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+

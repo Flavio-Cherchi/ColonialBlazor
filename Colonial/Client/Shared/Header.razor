@@ -1,0 +1,137 @@
+﻿@using Colonial.Shared.SharedModels.Account
+@inject NavigationManager Nav
+@inject Blazored.LocalStorage.ILocalStorageService Storage
+
+<div class="header text-center">
+    <div class="row">
+        @if (LoggedUser.Id != null)
+        {
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <label>@DateGame</label>
+                <br>
+                <div class="btn-group d-inline" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary" @onclick="() => Stop()"><i class="fa-solid fa-circle-pause"></i></button>
+                    <button type="button" class="btn btn-secondary" @onclick="() => GoGame(1000)"><i class="fa-solid fa-play"></i></button>
+                    <button type="button" class="btn btn-secondary" @onclick="() => GoGame(500)"><i class="fa-solid fa-forward"></i></button>
+                    <button type="button" class="btn btn-secondary" @onclick="() => GoGame(250)"><i class="fa-solid fa-forward-fast"></i></button>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <br>
+                <div class="btn-group d-inline" role="group" aria-label="Basic example">
+                    <a class="btn btn-secondary " href="profile"><i class="fa-solid fa-user-astronaut"></i></a>
+                    <button class="btn btn-secondary" @onclick="SignOut"><i class="fa-solid fa-rocket"></i></button>
+            </div>
+            </div>
+        }
+        else
+        {
+            @if (accountPage == 1)
+            {
+                <div class=row>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-10">
+                        <EditForm Model="@LoggedUser">
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label for="Username">
+                                        Username
+                                    </label>
+                                    <div class="col-lg-5">
+                                        <InputText id="Username" class="form-control" placeholder="First Name"
+                                           @bind-Value="LoggedUser.UserName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Password">
+                                        Password
+                                    </label>
+                                    <div class="col-lg-5">
+                                        <InputText id="Password" class="form-control" placeholder="Last Name"
+                                           @bind-Value="LoggedUser.Password" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                <button type="button" @onclick="@Login" class="btn btn-primary">Login</button>
+                                </div>
+                            </form>
+                        </EditForm>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+            }
+
+            <div class=row>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <label @onclick="() => ToAccountPage(1)">Login</label>
+                    <label @onclick="() => ToAccountPage(2)">Registrati</label>
+                    <label @onclick="() => ToAccountPage(3)">Password dimenticata?</label>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public DateOnly DateGame { get; set; } = new DateOnly(2500, 1, 1);
+    [Parameter] public int DateGame2 { get; set; } = 1;
+    private int accountPage { get; set; } = 1;
+    public User LoggedUser = new User();
+    private System.Threading.Timer _timer;
+
+
+    private void SignOut()
+    {
+        this.LoggedUser.Id = null;
+        //Storage.SetItemAsync<User>("LoggedUser", this.LoggedUser);
+        Storage.RemoveItemAsync("LoggedUser");
+    }
+
+    public void ToAccountPage(int accountPage)
+    {
+        this.accountPage = accountPage;
+
+        switch (this.accountPage)
+        {
+            case 1:
+                Nav.NavigateTo("/");
+                break;
+            case 2:
+                Nav.NavigateTo("registration");
+                break;
+            case 3:
+                Nav.NavigateTo("forgottenPassword");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private async Task Login()
+    {
+        await Task.Delay(1000);
+        LoggedUser.Id = 1;
+        LoggedUser.UserName = "TestingOne";
+        await Storage.SetItemAsync<User>("LoggedUser", this.LoggedUser);
+    }
+
+    async Task GoGame(int howFast)
+    {
+        Stop();
+        _timer = new System.Threading.Timer(async _ =>
+        {
+            this.DateGame = this.DateGame.AddDays(1);
+            await InvokeAsync(StateHasChanged);
+        }, null, 0, howFast);
+    }
+
+    public void Stop()
+    {
+        this._timer?.Dispose();
+    }
+}

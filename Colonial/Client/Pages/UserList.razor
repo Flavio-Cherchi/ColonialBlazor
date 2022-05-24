@@ -1,0 +1,119 @@
+﻿@page "/userList"
+@using Colonial.Shared.SharedModels.Account
+@using Colonial.Shared.SharedModels.Generic
+@using Colonial.Shared.Services
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService Storage
+
+<PageTitle>User List Test</PageTitle>
+
+<h1>User List</h1>
+
+@if (users == null)
+{
+    <p><em>In Caricamento...</em></p>
+}
+else
+{
+    @if(LoggedUser != null)
+    {
+    <p>Welcome, @LoggedUser.UserName!</p>
+    <p>@LoggedUser.Email</p>
+    <p>@LoggedUser.Id</p>        
+    }
+
+    <button class="btn btn-success" @onclick="() => Insert()"><i class="fa-solid fa-circle-plus"></i></button>
+    <button hidden="@HideLabel" class="btn btn-success" @onclick="() => Read(null)"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Mail</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button class="btn btn-success" @onclick="() => Read(user.Id)"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                        <button class="btn btn-success" @onclick="() => Update(user)"><i class="fa-solid fa-circle-up"></i></button>
+                        <button class="btn btn-success" @onclick="() => Delete(user.Id)"><i class="fa-solid fa-circle-minus"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private User[]? users;
+    private User? LoggedUser;
+    private bool HideLabel   {get;set;} = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.LoggedUser = await Storage.GetItemAsync<User>("LoggedUser");
+        await Read(null);
+    }
+
+    protected async Task Read(int? id)
+    {
+        User u = new User();
+        if (id != null)
+            u.Id = id;
+        try
+        {
+            var response = new HttpResponseMessage();
+            response = await Http.PostAsJsonAsync($"user/readUser/", u);
+            users = await response.Content.ReadFromJsonAsync<User[]>();                
+            HideLabel = (id == null);
+        }
+        catch { }
+    }
+
+    protected async Task Delete(int? id)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync($"user/delete/{id}");
+        }
+        catch { }
+        await Read(null);
+    }
+
+    protected async Task Update(User u)
+    {
+        u.UserName = GeneralService.NameGenerator(null);
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync("user/update", u);
+        }
+        catch { }
+        await Read(null);
+    }
+
+    protected async Task Insert()
+    {
+        User u = new User()
+            {
+                UserName = GeneralService.NameGenerator(null),
+                Email = GeneralService.NameGenerator(null) + "@test.it",
+                Password = "Xxx-1!",
+                Image = new Image { Id = 1, path = "test/test.jpg", type = "test" },
+                UserRole = new UserRole { Id = 1, Role = "test" }
+            };
+        try
+        {
+            var response = await Http.PostAsJsonAsync("user/create", u);
+        }
+        catch { }
+        await Read(null);
+    }
+}

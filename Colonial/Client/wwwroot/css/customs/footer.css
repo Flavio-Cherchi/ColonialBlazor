@@ -1,0 +1,124 @@
+
+/* BREAKING NEWS */
+@keyframes ticker {
+    0% {
+        margin-top: -4px
+    }
+
+    25% {
+        margin-top: -34px
+    }
+
+    50% {
+        margin-top: -64px
+    }
+
+    75% {
+        margin-top: -94px
+    }
+
+    100% {
+        margin-top: -4px
+    }
+}
+
+.news {
+    box-shadow: inset 0 -15px 30px rgba(0,0,0,0.4), 0 5px 10px rgba(0,0,0,0.5);
+    width: 350px;
+    height: 30px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.full-width {
+    width: 80%;
+}
+
+.news span {
+    float: left;
+    color: #fff;
+    padding: 6px;
+    position: relative;
+    top: -3px;
+    left: -3px;
+    border-radius: 4px;
+    box-shadow: inset 0 -15px 30px rgba(0,0,0,0.4);
+    font: 16px;
+    cursor: pointer
+}
+
+.news ul {
+    float: left;
+    padding-left: 20px;
+    animation: ticker 10s ease infinite;
+}
+
+    .news ul li {
+        line-height: 30px;
+        list-style: none
+    }
+
+        .news ul li a {
+            color: #fff;
+            text-decoration: none;
+            font: 14px Helvetica, Arial, sans-serif;
+        }
+
+    .news ul:hover {
+        animation-play-state: paused
+    }
+
+.news span:hover + ul {
+    animation-play-state: paused
+}
+
+/* OTHER COLORS */
+.blue {
+    background: #347fd0
+}
+
+    .blue span {
+        background: #2c66be
+    }
+
+.red {
+    background: #d23435
+}
+
+    .red span {
+        background: #c22b2c
+    }
+
+.green {
+    background: #699B67
+}
+
+    .green span {
+        background: #547d52
+    }
+
+.magenta {
+    background: #b63ace
+}
+
+    .magenta span {
+        background: #842696
+    }
+
+.yellow {
+    background: yellow
+}
+
+    .yellow span {
+        background: yellow
+    }
+/* BREAKING NEWS */
+
+/*
+    background-color: #acacac;
+    background-color: #bcbcbc;
+    border: 5px #c4c4c4 solid;
+
+*/

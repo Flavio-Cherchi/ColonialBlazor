@@ -1,0 +1,107 @@
+﻿@page "/test"
+@using Colonial.Shared.SharedModels
+@inject HttpClient Http
+
+<PageTitle>Test testoso</PageTitle>
+
+<h1>Test testoso!</h1>
+
+<p>Vediamo.</p>
+
+@if (players == null)
+{
+    <p><em>Caricamento...</em></p>
+}
+else
+{
+    <button class="btn btn-success" @onclick="() => Insert()"><i class="fa-solid fa-circle-plus"></i></button>
+    <button hidden="@HideLabel" class="btn btn-success" @onclick="() => Read(0)"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Età</th>
+                <th>Livello</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in players)
+            {
+                <tr>
+                    <td>@player.TName</td>
+                    <td>@player.IAge</td>
+                    <td>@player.ILevel</td>
+                    <td>
+                        <button class="btn btn-success" @onclick="() => Read(player.IId)"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                        <button class="btn btn-success" @onclick="() => Update(player)"><i class="fa-solid fa-circle-up"></i></button>
+                        <button class="btn btn-success" @onclick="() => Delete(player.IId)"><i class="fa-solid fa-circle-minus"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private TestObject[]? players;
+    private bool HideLabel   {get;set;} = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Read(0);
+    }
+
+    protected async Task Read(int id)
+    {
+        try
+        {
+            players = await Http.GetFromJsonAsync<TestObject[]>($"testing/read/{id}");
+            HideLabel = (id == 0);
+        }
+        catch { }
+    }
+
+    protected async Task Delete(int id)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync($"testing/delete/{id}");
+        }
+        catch { }
+        await Read(0);
+    }
+
+    protected async Task Update(TestObject test)
+    {
+        Random rn = new Random();
+        test.IAge = rn.Next(2,8);
+        test.TName = "Maraldo";
+        test.ILevel = rn.Next(2,5);
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync("testing/update", test);
+        }
+        catch { }
+        await Read(0);
+    }
+
+    protected async Task Insert()
+    {
+        TestObject test = new TestObject()
+            {
+                IId = 1,
+                IAge = 22,
+                TName = "Mary",
+                ILevel = 38
+            };
+        try
+        {
+            var response = await Http.PostAsJsonAsync("testing/create", test);
+        }
+        catch { }
+        await Read(0);
+    }
+}

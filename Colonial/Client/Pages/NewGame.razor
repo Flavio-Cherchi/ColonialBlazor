@@ -1,0 +1,52 @@
+﻿@page "/newgame"
+@using System.ComponentModel.DataAnnotations;
+
+<PageTitle>Nuova partita</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="StartNewGame">Nuova partita</button>
+
+<div hidden="@HideLabel1" class="jumbotron">
+    <EditForm Model="@exampleModel" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputText id="name" @bind-Value="exampleModel.Name"/>
+
+        <button type="submit">Submit</button>
+    </EditForm>
+
+</div>
+
+<div hidden="@HideLabel2" class="jumbotron">
+    <p>Salvato!</p>
+</div>
+
+@code {
+    private bool HideLabel1 { get; set; } = true;
+    private bool HideLabel2 { get; set; } = true;
+    private int currentCount = 0;
+    private ExampleModel exampleModel = new();
+
+    private void StartNewGame()
+    {
+        HideLabel1 = !HideLabel1;
+    }
+
+    
+    public void HandleValidSubmit()
+    {
+        HideLabel1 = !HideLabel1;
+        HideLabel2 = !HideLabel2;
+    }
+    public class ExampleModel
+    {
+        [Required]
+        [StringLength(10, ErrorMessage = "Name is too long.")]
+        public string? Name { get; set; }
+    }
+
+}

@@ -1,0 +1,56 @@
+﻿@page "/profile"
+@using Colonial.Shared.SharedModels.Account
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject Blazored.LocalStorage.ILocalStorageService Storage
+
+<PageTitle>Profilo</PageTitle>
+<EditForm Model="@LoggedUser">
+    <form class="form-group">
+        <div class="form-group row">
+            <label for="Username" class="col-sm-2 col-form-label">
+                Username
+            </label>
+            <div class="col-sm-10">
+                <InputText id="Username" class="form-control" placeholder="First Name"
+                           @bind-Value="LoggedUser.UserName" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="Password" class="col-sm-2 col-form-label">
+                Password
+            </label>
+            <div class="col-sm-10">
+                <InputText id="Password" class="form-control" placeholder="Last Name"
+                           @bind-Value="LoggedUser.Password" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="email" class="col-sm-2 col-form-label">
+                Email
+            </label>
+            <div class="col-sm-10">
+                <InputText id="email" class="form-control" placeholder="Email"
+                           @bind-Value="LoggedUser.Email" />
+            </div>
+        </div>
+        <button type="button" @onclick="@Save" class="btn btn-primary">Salva modifiche</button>
+    </form>
+</EditForm>
+
+
+
+@code {
+    public User LoggedUser { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.LoggedUser = await Storage.GetItemAsync<User>("LoggedUser");
+    }
+
+    protected void Save()
+    {
+
+    }
+
+}
